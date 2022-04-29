@@ -9,16 +9,25 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Data
-@NoArgsConstructor
 @Entity
 public class ServiceType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String name;
     private Integer price;
     private String serviceGroup;
     private String description;
     private Integer rang;
 
+    public ServiceType() {
+    }
+
+    public ServiceType(String name, Integer price, String serviceGroup, String description, Integer rang) {
+        this.name = name;
+        this.price = price;
+        this.serviceGroup = serviceGroup;
+        this.description = description;
+        this.rang = rang;
+    }
 }

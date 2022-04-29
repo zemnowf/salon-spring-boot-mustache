@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 //@EnableGlobalMethodSecurity(prePostEnabled = true) включает аутентификацию через аннотации(пример ниже), избавляет от нагруженного configure()
 //@PreAuthorize()
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -30,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/main", "/registration").permitAll()
+                    .antMatchers("/login", "/registration").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
