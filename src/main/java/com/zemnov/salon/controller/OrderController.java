@@ -7,6 +7,7 @@ import com.zemnov.salon.model.User;
 import com.zemnov.salon.repository.MasterRepo;
 import com.zemnov.salon.repository.OrderRepo;
 import com.zemnov.salon.repository.ServiceTypeRepo;
+import com.zemnov.salon.service.ChequeSaveService;
 import com.zemnov.salon.service.SmtpMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,6 +33,8 @@ public class OrderController {
     private MasterRepo masterRepo;
     @Autowired
     private SmtpMailSender mailSender;
+    @Autowired
+    private ChequeSaveService chequeSaveService;
 
 
     @GetMapping("/orders")
@@ -107,17 +110,26 @@ public class OrderController {
 
         Order order = new Order(user, currentService, currentMaster, date, time, status);
 
-        String message = String.format(
-          "Здравствуйте, " + user.getClientName() + "!\n" +
+        String message = "Здравствуйте, " + user.getClientName() + "!\n" +
                 "Вы оформили запись в нашем салоне на услугу " + order.getServiceTypeName().getServiceGroup() +
-                  "("+ order.getServiceTypeName().getName() +")" +"\n"
+                "(" + order.getServiceTypeName().getName() + ")" + "\n"
                 + "Ждём вас " + order.getOrderTime() + " " + order.getOrderDate() + ".\n"
                 + "Ваш мастер - " + order.getMaster().getName() + " " + order.getMaster().getSurname() + ".\n"
-                + "С уважением,  салон DZNTS."
-        );
+                + "С уважением,  салон DZNTS.";
+
+        String chequeText = "Клиент: " + user.getClientName() + "!\n" +
+                "Услуга: " + order.getServiceTypeName().getServiceGroup() +
+                "(" + order.getServiceTypeName().getName() + ")" + "\n"
+                + "Стоимость:" + order.getServiceTypeName().getPrice() + "\n"
+                + "Дата: " + order.getOrderTime() + " " + order.getOrderDate() + ".\n"
+                + "Мастер: " + order.getMaster().getName() + " " + order.getMaster().getSurname() + ".\n"
+                + "Салон DZNTS.";
+
         mailSender.send(user.getMail(),"Запись оформлена", message);
 
         orderRepo.save(order);
+
+        chequeSaveService.saveCheque(chequeText, order.getId());
 
         return ("orderSuccess");
     }

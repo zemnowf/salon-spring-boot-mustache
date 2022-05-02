@@ -4,7 +4,9 @@
 <#macro logout>
     <form action="/logout" method="post">
         <input type="hidden" name="_csrf" value="${_csrf.token}" />
+        <#if name != "Вы не авторизованы">
         <button class="btn btn-primary ml-3" type="submit">Выйти</button>
+        </#if>
     </form>
 </#macro>
 
