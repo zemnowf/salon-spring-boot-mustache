@@ -7,6 +7,7 @@ import com.zemnov.salon.model.User;
 import com.zemnov.salon.repository.MasterRepo;
 import com.zemnov.salon.repository.OrderRepo;
 import com.zemnov.salon.repository.ServiceTypeRepo;
+import com.zemnov.salon.service.SmtpMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/order")
@@ -31,6 +30,9 @@ public class OrderController {
     private OrderRepo orderRepo;
     @Autowired
     private MasterRepo masterRepo;
+    @Autowired
+    private SmtpMailSender mailSender;
+
 
     @GetMapping("/orders")
     public String show(@AuthenticationPrincipal User user,
@@ -104,6 +106,16 @@ public class OrderController {
         Master currentMaster = masters.get(0);
 
         Order order = new Order(user, currentService, currentMaster, date, time, status);
+
+        String message = String.format(
+          "Здравствуйте, " + user.getClientName() + "!\n" +
+                "Вы оформили запись в нашем салоне на услугу " + order.getServiceTypeName().getServiceGroup() +
+                  "("+ order.getServiceTypeName().getName() +")" +"\n"
+                + "Ждём вас " + order.getOrderTime() + " " + order.getOrderDate() + ".\n"
+                + "Ваш мастер - " + order.getMaster().getName() + " " + order.getMaster().getSurname() + ".\n"
+                + "С уважением,  салон DZNTS."
+        );
+        mailSender.send(user.getMail(),"Запись оформлена", message);
 
         orderRepo.save(order);
 
