@@ -46,6 +46,15 @@ public class OrderController {
 
         return("orderUserList");
     }
+
+    @GetMapping("/editOrders")
+    public String editOrders(Model model){
+        List<Order> orders=orderRepo.findAll();
+        model.addAttribute("orders", orders);
+
+        return("orderAdminPage");
+    }
+
     @GetMapping
     public String main(Model model) {
         List<ServiceType> serviceTypes = serviceTypeRepo.findAll();

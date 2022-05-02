@@ -47,7 +47,7 @@ public class MasterController {
     }
 
     @GetMapping("{master}/delete")
-    public String userDeleteForm(@PathVariable Master master, Model model) {
+    public String masterDeleteForm(@PathVariable Master master, Model model) {
         model.addAttribute("master", master);
 
         return "masterDelete";

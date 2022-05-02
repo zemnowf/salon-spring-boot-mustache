@@ -35,6 +35,11 @@
                     <a class="nav-link active" aria-current="page" href="/user">Пользователи</a>
                 </li>
                 </#if>
+                <#if isAdmin>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/orderAdmin">Управление записями</a>
+                    </li>
+                </#if>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/order/orders">Записи</a>
                 </li>
