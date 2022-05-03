@@ -8,6 +8,8 @@ import com.zemnov.salon.repository.MasterRepo;
 import com.zemnov.salon.repository.OrderRepo;
 import com.zemnov.salon.repository.ServiceTypeRepo;
 import com.zemnov.salon.service.ChequeSaveService;
+import com.zemnov.salon.service.MessageGeneratorService;
+import com.zemnov.salon.service.OrderService;
 import com.zemnov.salon.service.SmtpMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,24 +26,21 @@ import java.util.List;
 @Controller
 @RequestMapping("/order")
 public class OrderController {
-
-    @Autowired
-    private ServiceTypeRepo serviceTypeRepo;
-    @Autowired
-    private OrderRepo orderRepo;
-    @Autowired
-    private MasterRepo masterRepo;
     @Autowired
     private SmtpMailSender mailSender;
     @Autowired
     private ChequeSaveService chequeSaveService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private MessageGeneratorService messageGeneratorService;
 
 
     @GetMapping("/orders")
     public String show(@AuthenticationPrincipal User user,
                        Model model){
 
-        List<Order> orders=orderRepo.findByClient(user);
+        List<Order> orders=orderService.findOrdersByClient(user);
         model.addAttribute("orders", orders);
 
         return("orderUserList");
@@ -49,7 +48,8 @@ public class OrderController {
 
     @GetMapping("/editOrders")
     public String editOrders(Model model){
-        List<Order> orders=orderRepo.findAll();
+
+        List<Order> orders=orderService.findAllOrders();
         model.addAttribute("orders", orders);
 
         return("orderAdminPage");
@@ -57,12 +57,7 @@ public class OrderController {
 
     @GetMapping
     public String main(Model model) {
-        List<ServiceType> serviceTypes = serviceTypeRepo.findAll();
-
-        HashSet<String> serviceGroups = new HashSet<>();
-        for (int i = 0; i < serviceTypes.size(); i++) {
-            serviceGroups.add(serviceTypes.get(i).getServiceGroup());
-        }
+        HashSet<String> serviceGroups=orderService.findServiceGroups();
 
         model.addAttribute("serviceGroups", serviceGroups);
 
@@ -72,7 +67,8 @@ public class OrderController {
     @GetMapping("/details")
     public String detail(@RequestParam String serviceGroup,
                          Model model){
-        List<ServiceType> serviceTypes = serviceTypeRepo.findByServiceGroup(serviceGroup);
+
+        List<ServiceType> serviceTypes = orderService.findByServiceGroups(serviceGroup);
 
         model.addAttribute("serviceTypes", serviceTypes);
         model.addAttribute("serviceGroup", serviceGroup);
@@ -87,10 +83,10 @@ public class OrderController {
                                @RequestParam String time,
                                Model model){
 
-        List<ServiceType> serviceTypes = serviceTypeRepo.findByName(serviceType);
+        List<ServiceType> serviceTypes = orderService.findTypesByName(serviceType);
         ServiceType currentService = serviceTypes.get(0);
         Integer currentRang = currentService.getRang();
-        List<Master> masters = masterRepo.findByRang(currentRang);
+        List<Master> masters = orderService.findMastersByRang(currentRang);
 
 
         model.addAttribute("serviceType", serviceType);
@@ -111,32 +107,21 @@ public class OrderController {
                             @RequestParam String master,
                          Model model) {
         String status = "processing";
-        List<ServiceType> serviceTypes = serviceTypeRepo.findByName(serviceType);
+        List<ServiceType> serviceTypes = orderService.findTypesByName(serviceType);
         ServiceType currentService = serviceTypes.get(0);
 
-        List<Master> masters = masterRepo.findByName(master);
+        List<Master> masters = orderService.findMasterByName(master);
         Master currentMaster = masters.get(0);
 
         Order order = new Order(user, currentService, currentMaster, date, time, status);
 
-        String message = "Здравствуйте, " + user.getClientName() + "!\n" +
-                "Вы оформили запись в нашем салоне на услугу " + order.getServiceTypeName().getServiceGroup() +
-                "(" + order.getServiceTypeName().getName() + ")" + "\n"
-                + "Ждём вас " + order.getOrderTime() + " " + order.getOrderDate() + ".\n"
-                + "Ваш мастер - " + order.getMaster().getName() + " " + order.getMaster().getSurname() + ".\n"
-                + "С уважением,  салон DZNTS.";
+        String message = messageGeneratorService.mailMessageGenerate(user, order);
 
-        String chequeText = "Клиент: " + user.getClientName() + "!\n" +
-                "Услуга: " + order.getServiceTypeName().getServiceGroup() +
-                "(" + order.getServiceTypeName().getName() + ")" + "\n"
-                + "Стоимость:" + order.getServiceTypeName().getPrice() + "\n"
-                + "Дата: " + order.getOrderTime() + " " + order.getOrderDate() + ".\n"
-                + "Мастер: " + order.getMaster().getName() + " " + order.getMaster().getSurname() + ".\n"
-                + "Салон DZNTS.";
+        String chequeText = messageGeneratorService.chequeMessageGenerate(user, order);
 
         mailSender.send(user.getMail(),"Запись оформлена", message);
 
-        orderRepo.save(order);
+        orderService.saveOrder(order);
 
         chequeSaveService.saveCheque(chequeText, order.getId());
 

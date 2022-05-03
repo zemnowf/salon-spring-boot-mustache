@@ -13,7 +13,7 @@ public class MasterService{
     private MasterRepo masterRepo;
 
     public List<Master> findMasters(Integer rang){
-        List<Master> masters = masterRepo.findAll();
+        List<Master> masters;
 
         if(rang != 1) {
             masters = masterRepo.findByRang(rang);

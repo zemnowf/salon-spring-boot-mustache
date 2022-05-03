@@ -2,15 +2,9 @@ package com.zemnov.salon.controller;
 
 import com.zemnov.salon.model.Master;
 import com.zemnov.salon.model.Order;
-import com.zemnov.salon.model.ServiceType;
-import com.zemnov.salon.model.User;
-import com.zemnov.salon.repository.MasterRepo;
-import com.zemnov.salon.repository.OrderRepo;
-import com.zemnov.salon.repository.ServiceTypeRepo;
 import com.zemnov.salon.service.OrderAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,9 +54,7 @@ public class OrderAdminController {
 
     @PostMapping("/submit")
     public String submit(@RequestParam("orderId") Order order,
-            @RequestParam String master,
-            Model model) {
-        String status = "submitted";
+            @RequestParam String master) {
 
         orderAdminService.orderAdminSubmit(order, master);
 
