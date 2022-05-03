@@ -5,6 +5,7 @@ import com.zemnov.salon.model.Role;
 import com.zemnov.salon.model.User;
 import com.zemnov.salon.repository.ContactRepo;
 import com.zemnov.salon.repository.UserRepo;
+import com.zemnov.salon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,13 +23,12 @@ import java.util.stream.Collectors;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
     @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private ContactRepo contactRepo;
+    private UserService userService;
 
     @GetMapping
     public String userList(Model model) {
-        model.addAttribute("users", userRepo.findAll());
+        List<User> users = userService.findAllUsers();
+        model.addAttribute("users", users);
         return "userList";
     }
 
@@ -52,7 +53,7 @@ public class UserController {
             @RequestParam("userId") User user
     ) {
 
-        contactRepo.deleteById(user.getId()+1);
+        userService.deleteUserById(user);
 
         return "redirect:/user";
     }
@@ -82,10 +83,10 @@ public class UserController {
             }
         }
 
-        userRepo.save(user);
+        userService.saveUser(user);
 
         Contact contact = new Contact(clientName, number, mail, user);
-        contactRepo.save(contact);
+        userService.saveContact(contact);
 
 
         return "redirect:/user";
