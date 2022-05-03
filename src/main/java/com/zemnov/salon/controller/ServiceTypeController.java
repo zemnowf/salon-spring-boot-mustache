@@ -2,6 +2,7 @@ package com.zemnov.salon.controller;
 
 import com.zemnov.salon.model.ServiceType;
 import com.zemnov.salon.repository.ServiceTypeRepo;
+import com.zemnov.salon.service.ServiceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,15 +16,11 @@ import java.util.Map;
 public class ServiceTypeController {
 
     @Autowired
-    private ServiceTypeRepo serviceTypeRepo;
+    private ServiceTypeService serviceTypeService;
 
     @GetMapping
     public String findAll(@RequestParam(required = false, defaultValue = "1") Integer rang, Model model) {
-        List<ServiceType> serviceTypes = serviceTypeRepo.findAll();
-
-        if(rang != 1) {
-            serviceTypes = serviceTypeRepo.findByRang(rang);
-        } else serviceTypes = serviceTypeRepo.findAll();
+        List<ServiceType> serviceTypes = serviceTypeService.findAllServiceTypes(rang);
 
         model.addAttribute("serviceTypes", serviceTypes);
         return "service-types";
@@ -50,7 +47,7 @@ public class ServiceTypeController {
             @RequestParam Integer price,
             @RequestParam String serviceGroup,
             @RequestParam String description,
-            @RequestParam Integer rang, Map<String, Object> model)
+            @RequestParam Integer rang)
     {
         serviceType.setName(name);
         serviceType.setPrice(price);
@@ -58,7 +55,7 @@ public class ServiceTypeController {
         serviceType.setDescription(description);
         serviceType.setRang(rang);
 
-        serviceTypeRepo.save(serviceType);
+        serviceTypeService.saveServiceType(serviceType);
 
         return ("redirect:/service-types");
     }
@@ -66,7 +63,7 @@ public class ServiceTypeController {
     @PostMapping("/delete")
     public String serviceTypeDelete(
             @RequestParam("serviceTypeId") ServiceType serviceType) {
-        serviceTypeRepo.deleteById(serviceType.getId());
+        serviceTypeService.deleteServiceTypeById(serviceType);
 
         return ("redirect:/service-types");
     }
@@ -77,9 +74,9 @@ public class ServiceTypeController {
             @RequestParam Integer price,
             @RequestParam String serviceGroup,
             @RequestParam String description,
-            @RequestParam Integer rang, Map<String, Object> model){
+            @RequestParam Integer rang){
         ServiceType serviceType = new ServiceType(name, price,serviceGroup,description, rang);
-        serviceTypeRepo.save(serviceType);
+        serviceTypeService.saveServiceType(serviceType);
         return "redirect:/service-types";
     }
 
