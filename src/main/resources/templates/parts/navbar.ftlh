@@ -52,6 +52,11 @@
                         <a class="nav-link active" aria-current="page" href="/statistics/charts">СТАТИСТИКА</a>
                     </li>
                 </#if>
+                <#if isAdmin>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/statistics/earnings">ВЫРУЧКА</a>
+                    </li>
+                </#if>
             </ul>
 
             <div class="navbar-text mr-3" >${name}</div>

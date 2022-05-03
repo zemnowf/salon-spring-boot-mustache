@@ -2,6 +2,8 @@ package com.zemnov.salon.controller;
 
 import com.zemnov.salon.model.Order;
 import com.zemnov.salon.repository.OrderRepo;
+import com.zemnov.salon.service.OrderService;
+import com.zemnov.salon.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,19 +19,27 @@ import java.util.*;
 public class StatisticsController {
 
     @Autowired
-    private OrderRepo orderRepo;
+    private StatisticsService statisticsService;
 
     @GetMapping("/charts")
     public String showCharts(Model model){
-        List<Order> orders=orderRepo.findAll();
 
-        Map<String, Integer> servicesAndCounts = new HashMap<String, Integer>();
-        for (int i = 0; i < orders.size(); i++) {
-            servicesAndCounts.put(orders.get(i).getServiceTypeName().getName(),
-                    orderRepo.countAllByServiceTypeName(orders.get(i).getServiceTypeName()));
-        }
+        Map<String, Integer> servicesAndCounts = statisticsService.countedServiceTypes();
 
         model.addAttribute("map", servicesAndCounts);
         return("charts");
+    }
+
+    @GetMapping("/earnings")
+    public String showEarnings(Model model){
+        List<Order> orders = statisticsService.showEarnings();
+        Integer lowEarnings = statisticsService.countLowRangServiceTypes();
+        Integer highEarnings = statisticsService.countHighRangServiceTypes();
+
+        model.addAttribute("lowEarnings", lowEarnings);
+        model.addAttribute("highEarnings", highEarnings);
+        model.addAttribute("orders", orders);
+
+        return("earnings");
     }
 }
