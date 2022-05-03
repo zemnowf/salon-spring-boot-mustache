@@ -7,6 +7,7 @@ import com.zemnov.salon.model.User;
 import com.zemnov.salon.repository.MasterRepo;
 import com.zemnov.salon.repository.OrderRepo;
 import com.zemnov.salon.repository.ServiceTypeRepo;
+import com.zemnov.salon.service.OrderAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,15 +23,12 @@ import java.util.List;
 public class OrderAdminController {
 
     @Autowired
-    private OrderRepo orderRepo;
-    @Autowired
-    private MasterRepo masterRepo;
-    @Autowired
-    private ServiceTypeRepo serviceTypeRepo;
+    private OrderAdminService orderAdminService;
 
     @GetMapping
     public String editOrders(Model model){
-        List<Order> orders=orderRepo.findAll();
+
+        List<Order> orders=orderAdminService.findAllOrders();
         model.addAttribute("orders", orders);
 
         return("orderAdminPage");
@@ -39,7 +37,7 @@ public class OrderAdminController {
     @GetMapping("{order}/edit")
     public String orderAdminEditForm(@PathVariable Order order, Model model) {
 
-        List<Master> masters = masterRepo.findByRang(order.getServiceTypeName().getRang());
+        List<Master> masters = orderAdminService.orderAdminEditForm(order);
 
         model.addAttribute("masters", masters);
         model.addAttribute("order", order);
@@ -56,7 +54,7 @@ public class OrderAdminController {
 
     @PostMapping("/delete")
     public String delete(@RequestParam("orderId") Order order){
-        orderRepo.deleteById(order.getId());
+        orderAdminService.deleteOrder(order);
         return("redirect:/orderAdmin");
     }
 
@@ -66,12 +64,7 @@ public class OrderAdminController {
             Model model) {
         String status = "submitted";
 
-        List<Master> masters = masterRepo.findByName(master);
-        Master currentMaster = masters.get(0);
-
-        order.setMaster(currentMaster);
-        order.setOrderStatus(status);
-        orderRepo.save(order);
+        orderAdminService.orderAdminSubmit(order, master);
 
         return ("redirect:/orderAdmin");
     }
