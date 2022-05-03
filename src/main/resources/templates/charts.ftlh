@@ -3,16 +3,33 @@
 <#include "parts/security.ftlh">
 
 <@c.page>
-    <table class="table table-hover">
-        <tr>
-            <th>Услуга</th>
-            <th>Количество записей</th>
-        </tr>
-        <#list map as key, value>
-        <tr>
-            <td>${key}</td>
-            <td>${value}</td>
-        </tr>
-        </#list>
-    </table>
+    <html>
+    <head>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load("current", {packages:["corechart"]});
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Услуга', 'Цена'],
+                    <#list map as key, value>
+                    ['${key}', ${value}],
+                    </#list>
+                    ['Sleep',    0]
+                ]);
+
+                var options = {
+                    title: 'Рентабельность услуг',
+                    pieHole: 0.4,
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                chart.draw(data, options);
+            }
+        </script>
+    </head>
+    <body>
+    <div id="donutchart" style="width: 900px; height: 500px;"></div>
+    </body>
+    </html>
 </@c.page>
