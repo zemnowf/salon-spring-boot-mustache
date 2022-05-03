@@ -5,6 +5,7 @@ import com.zemnov.salon.model.Role;
 import com.zemnov.salon.model.User;
 import com.zemnov.salon.repository.ContactRepo;
 import com.zemnov.salon.repository.UserRepo;
+import com.zemnov.salon.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,7 @@ import java.util.Map;
 
 @Controller
 public class RegistrationController {
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private ContactRepo contactRepo;
+    private RegistrationService registrationService;
 
     @GetMapping("/registration")
     public String registration() {
@@ -32,19 +30,18 @@ public class RegistrationController {
                           @RequestParam String number,
                           @RequestParam String mail,
                           Map<String, Object> model) {
-        User userFromDb = userRepo.findByUsername(user.getUsername());
+
+        User userFromDb = registrationService.findUserByUsername(user);
 
         if(userFromDb != null) {
             model.put("message", "Пользователь уже существует");
             return "registration";
         }
 
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        userRepo.save(user);
+        registrationService.saveUser(user);
 
         Contact contact = new Contact(clientName, number, mail, user);
-        contactRepo.save(contact);
+        registrationService.saveContact(contact);
 
         return "redirect:/login";
     }
