@@ -30,19 +30,28 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/order">Оформить запись</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/order/orders">Мои записи</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active " aria-current="page"> </a>
+                </li>
+
                 <#if isAdmin>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/user">Пользователи</a>
+                    <a class="nav-link active" aria-current="page" href="/user">ПОЛЬЗОВАТЕЛИ</a>
                 </li>
                 </#if>
                 <#if isAdmin>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/orderAdmin">Управление записями</a>
+                        <a class="nav-link active" aria-current="page" href="/orderAdmin">УПРАВЛЕНИЕ ЗАПИСЯМИ</a>
                     </li>
                 </#if>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/order/orders">Записи</a>
-                </li>
+                <#if isAdmin>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/statistics/charts">СТАТИСТИКА</a>
+                    </li>
+                </#if>
             </ul>
 
             <div class="navbar-text mr-3" >${name}</div>
