@@ -16,24 +16,13 @@ import java.util.Map;
 @Controller
 @RequestMapping("/masters")
 public class MasterController {
-
-    //тут должен быть MasterService, а в нем Repo
     @Autowired
-    private MasterRepo masterRepo;
     private MasterService masterService;
 
-//    @GetMapping("/masters")
-//    public String main()
-
-    //    @PreAuthorize("hasAnyAuthority('USER')")
     @GetMapping
     public String main(@RequestParam(required = false, defaultValue = "1") Integer rang,  Model model) {
-        List<Master> masters = masterRepo.findAll();
 
-        if(rang != 1) {
-            masters = masterRepo.findByRang(rang);
-        } else masters = masterRepo.findAll();
-
+        List<Master> masters = masterService.findMasters(rang);
         model.addAttribute("masters", masters);
 
         return "masters";
@@ -42,7 +31,6 @@ public class MasterController {
     @GetMapping("{master}/edit")
     public String masterEditForm(@PathVariable Master master, Model model) {
         model.addAttribute("master", master);
-
         return "masterEdit";
     }
 
@@ -60,12 +48,7 @@ public class MasterController {
             @RequestParam String surname,
             @RequestParam Integer rang, Map<String, Object> model)
     {
-        master.setName(name);
-        master.setSurname(surname);
-        master.setRang(rang);
-
-        masterRepo.save(master);
-
+        masterService.masterSave(master, name, surname, rang);
         return ("redirect:/masters");
     }
 
@@ -74,22 +57,18 @@ public class MasterController {
             @RequestParam("masterId") Master master
             )
     {
-        masterRepo.deleteById(master.getId());
+        masterService.masterDelete(master);
         return ("redirect:/masters");
     }
 
 
     @PostMapping
     public String add(
-            @AuthenticationPrincipal User user,
-//            @RequestBody User user(или ModelAttribute или как то с Model) попробуй использовать вместо RequestParam
             @RequestParam String name,
             @RequestParam String surname,
-            @RequestParam Integer rang, Map<String, Object> model){
-        Master master = new Master(name, surname, rang);
-        masterRepo.save(master);
-//        Iterable<Master> masters = masterRepo.findAll();
-//        model.put("masters", masters);
+            @RequestParam Integer rang){
+
+        masterService.masterAdd(name, surname, rang);
 
         return "redirect:/masters";
     }
