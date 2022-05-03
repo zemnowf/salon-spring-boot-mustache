@@ -8,7 +8,6 @@
             <th>Id</th>
             <th>Услуга</th>
             <th>Клиент</th>
-            <th></th>
             <th>Мастер</th>
             <th>Дата</th>
             <th>Время</th>
@@ -20,8 +19,7 @@
             <tr>
                 <td>${order.id}</td>
                 <td>${order.serviceTypeName.name}</td>
-                <td>${order.client.clientName!}</td>
-                <td>(${order.client.username})</td>
+                <td>${order.client.clientName!} (${order.client.username!})</td>
                 <td>${order.master.name} ${order.master.surname}</td>
                 <td>${order.orderDate}</td>
                 <td>${order.orderTime}</td>
