@@ -18,7 +18,7 @@
             </select>
             <input type="time" value="9:00" name="time" min="09:00" max="19:00" step="1800" required>
 
-            <input type="date" value="2022-05-01" name="date" min="2022-05-01" required>
+            <input type="date" value="2022-05-05" name="date" min="2022-05-05" required>
 
             <button type="submit">Далее</button>
         </form>

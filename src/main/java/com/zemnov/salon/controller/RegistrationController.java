@@ -17,6 +17,7 @@ import java.util.Map;
 
 @Controller
 public class RegistrationController {
+    @Autowired
     private RegistrationService registrationService;
 
     @GetMapping("/registration")
