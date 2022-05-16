@@ -1,5 +1,6 @@
 package com.zemnov.salon.controller;
 
+import com.zemnov.salon.dto.MasterCreateRequestDto;
 import com.zemnov.salon.model.Master;
 import com.zemnov.salon.service.MasterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,12 +61,9 @@ public class MasterController {
 
 
     @PostMapping
-    public String add(
-            @RequestParam String name,
-            @RequestParam String surname,
-            @RequestParam Integer rang){
+    public String add(MasterCreateRequestDto masterCreateRequestDto){
 
-        masterService.masterAdd(name, surname, rang);
+        masterService.masterAdd(masterCreateRequestDto);
 
         return "redirect:/masters";
     }

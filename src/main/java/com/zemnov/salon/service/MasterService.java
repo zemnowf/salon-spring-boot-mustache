@@ -1,5 +1,6 @@
 package com.zemnov.salon.service;
 
+import com.zemnov.salon.dto.MasterCreateRequestDto;
 import com.zemnov.salon.model.Master;
 import com.zemnov.salon.repository.MasterRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,9 @@ public class MasterService{
         masterRepo.deleteById(master.getId());
     }
 
-    public void masterAdd(String name, String surname, Integer rang){
-        Master master = new Master(name, surname, rang);
+    public void masterAdd(MasterCreateRequestDto masterCreateRequestDto){
+        Master master = new Master(masterCreateRequestDto.getName(), masterCreateRequestDto.getSurname(),
+                masterCreateRequestDto.getRang());
         masterRepo.save(master);
     }
 

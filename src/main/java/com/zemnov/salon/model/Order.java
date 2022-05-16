@@ -1,11 +1,7 @@
 package com.zemnov.salon.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Data
 @Entity
@@ -23,7 +19,6 @@ public class Order {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name="service_type_id")
     private ServiceType serviceTypeName;
-
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name="master_id")

@@ -1,8 +1,6 @@
 package com.zemnov.salon.controller;
 
 import com.zemnov.salon.model.Order;
-import com.zemnov.salon.repository.OrderRepo;
-import com.zemnov.salon.service.OrderService;
 import com.zemnov.salon.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

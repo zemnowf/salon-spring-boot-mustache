@@ -4,9 +4,6 @@ import com.zemnov.salon.model.Master;
 import com.zemnov.salon.model.Order;
 import com.zemnov.salon.model.ServiceType;
 import com.zemnov.salon.model.User;
-import com.zemnov.salon.repository.MasterRepo;
-import com.zemnov.salon.repository.OrderRepo;
-import com.zemnov.salon.repository.ServiceTypeRepo;
 import com.zemnov.salon.service.ChequeSaveService;
 import com.zemnov.salon.service.MessageGeneratorService;
 import com.zemnov.salon.service.OrderService;
@@ -35,7 +32,6 @@ public class OrderController {
     @Autowired
     private MessageGeneratorService messageGeneratorService;
 
-
     @GetMapping("/orders")
     public String show(@AuthenticationPrincipal User user,
                        Model model){
@@ -57,6 +53,7 @@ public class OrderController {
 
     @GetMapping
     public String main(Model model) {
+
         HashSet<String> serviceGroups=orderService.findServiceGroups();
 
         model.addAttribute("serviceGroups", serviceGroups);
@@ -104,8 +101,8 @@ public class OrderController {
                             @RequestParam String serviceType,
                             @RequestParam String date,
                             @RequestParam String time,
-                            @RequestParam String master,
-                         Model model) {
+                            @RequestParam String master) {
+
         String status = "processing";
         List<ServiceType> serviceTypes = orderService.findTypesByName(serviceType);
         ServiceType currentService = serviceTypes.get(0);

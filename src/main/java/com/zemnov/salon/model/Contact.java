@@ -1,12 +1,13 @@
 package com.zemnov.salon.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-
+@NoArgsConstructor
 public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,9 +19,6 @@ public class Contact {
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "user_id")
     private User client;
-
-    public Contact() {
-    }
 
     public Contact(String clientName, String number, String mail, User client) {
         this.clientName = clientName;

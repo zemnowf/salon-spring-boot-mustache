@@ -41,6 +41,7 @@ public class OrderAdminController {
 
     @GetMapping("{order}/delete")
     public String orderAdminDeleteForm(@PathVariable Order order, Model model) {
+
         model.addAttribute("order", order);
 
         return "orderAdminDelete";
@@ -48,6 +49,7 @@ public class OrderAdminController {
 
     @PostMapping("/delete")
     public String delete(@RequestParam("orderId") Order order){
+
         orderAdminService.deleteOrder(order);
         return("redirect:/orderAdmin");
     }

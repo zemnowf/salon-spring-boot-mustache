@@ -1,7 +1,6 @@
 package com.zemnov.salon.controller;
 
 import com.zemnov.salon.model.ServiceType;
-import com.zemnov.salon.repository.ServiceTypeRepo;
 import com.zemnov.salon.service.ServiceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/service-types")
