@@ -16,6 +16,7 @@ public class MasterServiceImpl implements MasterService {
 
     @Override
     public List<Master> findMasters(Integer rang){
+
         List<Master> masters;
 
         if(rang != 1) {
@@ -27,22 +28,28 @@ public class MasterServiceImpl implements MasterService {
 
     @Override
     public void saveMaster(Master master, String name, String surname, Integer rang){
+
         master.setName(name);
         master.setSurname(surname);
         master.setRang(rang);
         masterRepo.save(master);
+
     }
 
     @Override
     public void deleteMaster(Master master){
+
         masterRepo.deleteById(master.getId());
+
     }
 
     @Override
     public void addMaster(MasterCreateRequestDto masterCreateRequestDto){
+
         Master master = new Master(masterCreateRequestDto.getName(), masterCreateRequestDto.getSurname(),
                 masterCreateRequestDto.getRang());
         masterRepo.save(master);
+
     }
 
 }

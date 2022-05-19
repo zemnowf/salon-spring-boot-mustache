@@ -20,7 +20,7 @@ public class MasterController {
     private MasterService masterService;
 
     @GetMapping
-    public String main(@RequestParam(required = false, defaultValue = "1") Integer rang,  Model model) {
+    public String main(@RequestParam(required = false) Integer rang,  Model model) {
 
         List<Master> masters = masterService.findMasters(rang);
         model.addAttribute("masters", masters);

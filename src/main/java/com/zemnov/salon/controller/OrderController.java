@@ -5,8 +5,7 @@ import com.zemnov.salon.model.Order;
 import com.zemnov.salon.model.ServiceType;
 import com.zemnov.salon.model.User;
 import com.zemnov.salon.service.cheque.ChequeSaveService;
-import com.zemnov.salon.service.cheque.ChequeSaveServiceImpl;
-import com.zemnov.salon.service.MessageGeneratorService;
+import com.zemnov.salon.utils.MessageGenerator;
 import com.zemnov.salon.service.OrderService;
 import com.zemnov.salon.service.SmtpMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private MessageGeneratorService messageGeneratorService;
+    private MessageGenerator messageGeneratorService;
 
     @GetMapping("/orders")
     public String show(@AuthenticationPrincipal User user,
