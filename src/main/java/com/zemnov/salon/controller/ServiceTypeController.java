@@ -1,5 +1,7 @@
 package com.zemnov.salon.controller;
 
+import com.zemnov.salon.dto.ServiceTypeSaveDto;
+import com.zemnov.salon.dto.UserEditRequestDto;
 import com.zemnov.salon.model.ServiceType;
 import com.zemnov.salon.service.ServiceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +43,13 @@ public class ServiceTypeController {
     @PostMapping("/edit")
     public String serviceTypeSave(
             @RequestParam("serviceTypeId") ServiceType serviceType,
-            @RequestParam String name,
-            @RequestParam Integer price,
-            @RequestParam String serviceGroup,
-            @RequestParam String description,
-            @RequestParam Integer rang)
+            @RequestBody ServiceTypeSaveDto serviceTypeSaveDto)
     {
-        serviceType.setName(name);
-        serviceType.setPrice(price);
-        serviceType.setServiceGroup(serviceGroup);
-        serviceType.setDescription(description);
-        serviceType.setRang(rang);
+        serviceType.setName(serviceTypeSaveDto.getName());
+        serviceType.setPrice(serviceTypeSaveDto.getPrice());
+        serviceType.setServiceGroup(serviceTypeSaveDto.getServiceGroup());
+        serviceType.setDescription(serviceTypeSaveDto.getDescription());
+        serviceType.setRang(serviceTypeSaveDto.getRang());
 
         serviceTypeService.saveServiceType(serviceType);
 

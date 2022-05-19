@@ -16,11 +16,6 @@ class MasterRepoTests {
     @Autowired
     private MasterRepo masterRepo;
 
-
-    @Test
-    void contextLoads() {
-    }
-
     @Test
     public void masterSave(){
         Master master = new Master();

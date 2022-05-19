@@ -25,6 +25,4 @@ public class SmtpMailSender {
         mailSender.send(mailMessage);
     }
 
-
-
 }
