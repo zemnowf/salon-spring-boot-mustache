@@ -26,7 +26,7 @@ public class StatisticsService {
         return servicesAndCounts;
     }
 
-    public List<Order> showEarnings(){
+    public List<Order> getOrders(){
        return orderRepo.findAll();
     }
 

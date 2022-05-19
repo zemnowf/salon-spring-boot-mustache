@@ -30,7 +30,7 @@ public class StatisticsController {
 
     @GetMapping("/earnings")
     public String showEarnings(Model model){
-        List<Order> orders = statisticsService.showEarnings();
+        List<Order> orders = statisticsService.getOrders();
         Integer lowEarnings = statisticsService.countLowRangServiceTypes();
         Integer highEarnings = statisticsService.countHighRangServiceTypes();
 

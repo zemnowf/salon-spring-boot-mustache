@@ -1,4 +1,4 @@
-package com.zemnov.salon.service;
+package com.zemnov.salon.service.order;
 
 import com.zemnov.salon.model.Master;
 import com.zemnov.salon.model.Order;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @Service
-public class OrderService {
+public class OrderServiceImpl implements OrderService{
     @Autowired
     private ServiceTypeRepo serviceTypeRepo;
     @Autowired

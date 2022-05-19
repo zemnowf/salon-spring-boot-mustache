@@ -2,7 +2,8 @@ package com.zemnov.salon.controller;
 
 import com.zemnov.salon.model.Master;
 import com.zemnov.salon.model.Order;
-import com.zemnov.salon.service.OrderAdminService;
+import com.zemnov.salon.service.order.OrderAdminService;
+import com.zemnov.salon.service.order.OrderAdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

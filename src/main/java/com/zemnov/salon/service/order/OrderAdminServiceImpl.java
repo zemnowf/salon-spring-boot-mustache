@@ -1,4 +1,4 @@
-package com.zemnov.salon.service;
+package com.zemnov.salon.service.order;
 
 import com.zemnov.salon.model.Master;
 import com.zemnov.salon.model.Order;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class OrderAdminService {
+public class OrderAdminServiceImpl implements OrderAdminService{
     @Autowired
     private OrderRepo orderRepo;
     @Autowired
