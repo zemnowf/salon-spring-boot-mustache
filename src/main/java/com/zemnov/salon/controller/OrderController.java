@@ -1,5 +1,6 @@
 package com.zemnov.salon.controller;
 
+import com.zemnov.salon.dto.OrderSubmitDto;
 import com.zemnov.salon.model.Master;
 import com.zemnov.salon.model.Order;
 import com.zemnov.salon.model.ServiceType;
@@ -98,20 +99,17 @@ public class OrderController {
 
     @PostMapping("/submit")
     public String submit(
-                            @AuthenticationPrincipal User user,
-                            @RequestParam String serviceType,
-                            @RequestParam String date,
-                            @RequestParam String time,
-                            @RequestParam String master) {
+            @AuthenticationPrincipal User user,
+            OrderSubmitDto orderSubmitDto) {
 
         String status = "processing";
-        List<ServiceType> serviceTypes = orderService.findTypesByName(serviceType);
+        List<ServiceType> serviceTypes = orderService.findTypesByName(orderSubmitDto.getServiceType());
         ServiceType currentService = serviceTypes.get(0);
 
-        List<Master> masters = orderService.findMasterByName(master);
+        List<Master> masters = orderService.findMasterByName(orderSubmitDto.getMaster());
         Master currentMaster = masters.get(0);
 
-        Order order = new Order(user, currentService, currentMaster, date, time, status);
+        Order order = new Order(user, currentService, currentMaster, orderSubmitDto.getDate(), orderSubmitDto.getTime(), status);
 
         String message = messageGeneratorService.mailMessageGenerate(user, order);
 
