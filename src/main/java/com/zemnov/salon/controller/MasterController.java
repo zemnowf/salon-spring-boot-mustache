@@ -2,7 +2,8 @@ package com.zemnov.salon.controller;
 
 import com.zemnov.salon.dto.MasterCreateRequestDto;
 import com.zemnov.salon.model.Master;
-import com.zemnov.salon.service.MasterService;
+import com.zemnov.salon.service.master.MasterService;
+import com.zemnov.salon.service.master.MasterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/masters")
 public class MasterController {
+
     @Autowired
     private MasterService masterService;
 
@@ -46,7 +48,7 @@ public class MasterController {
             @RequestParam String surname,
             @RequestParam Integer rang, Map<String, Object> model)
     {
-        masterService.masterSave(master, name, surname, rang);
+        masterService.saveMaster(master, name, surname, rang);
         return ("redirect:/masters");
     }
 
@@ -55,7 +57,7 @@ public class MasterController {
             @RequestParam("masterId") Master master
             )
     {
-        masterService.masterDelete(master);
+        masterService.deleteMaster(master);
         return ("redirect:/masters");
     }
 
@@ -63,7 +65,7 @@ public class MasterController {
     @PostMapping
     public String add(MasterCreateRequestDto masterCreateRequestDto){
 
-        masterService.masterAdd(masterCreateRequestDto);
+        masterService.addMaster(masterCreateRequestDto);
 
         return "redirect:/masters";
     }

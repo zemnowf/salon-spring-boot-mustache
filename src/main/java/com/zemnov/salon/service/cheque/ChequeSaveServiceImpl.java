@@ -1,4 +1,4 @@
-package com.zemnov.salon.service;
+package com.zemnov.salon.service.cheque;
 
 import org.springframework.stereotype.Service;
 
@@ -8,8 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 @Service
-public class ChequeSaveService {
+public class ChequeSaveServiceImpl implements ChequeSaveService{
 
+    @Override
     public void saveCheque(String chequeText, Long chequeId){
 
         File directory = new File("cheques");
