@@ -12,6 +12,8 @@ import java.util.Map;
 @Service
 public class StatisticsService {
 
+    static final Integer ZERO_EARNINGS = 0;
+
     @Autowired
     private OrderRepo orderRepo;
 
@@ -32,7 +34,7 @@ public class StatisticsService {
 
     public Integer countHighRangServiceTypes(){
         List<Order> orders = orderRepo.findAll();
-        Integer highRangServiceTypesEarning=0;
+        Integer highRangServiceTypesEarning=ZERO_EARNINGS;
         for (int i = 0; i < orders.size(); i++) {
             if(orders.get(i).getServiceTypeName().getRang()!=3){
                 highRangServiceTypesEarning+=orders.get(i).getServiceTypeName().getPrice();
@@ -43,7 +45,7 @@ public class StatisticsService {
 
     public Integer countLowRangServiceTypes(){
         List<Order> orders = orderRepo.findAll();
-        Integer lowRangServiceTypesEarning=0;
+        Integer lowRangServiceTypesEarning=ZERO_EARNINGS;
         for (int i = 0; i < orders.size(); i++) {
             if(orders.get(i).getServiceTypeName().getRang()==3){
                 lowRangServiceTypesEarning+=orders.get(i).getServiceTypeName().getPrice();
