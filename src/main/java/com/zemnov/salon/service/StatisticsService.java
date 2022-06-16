@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static java.util.function.Predicate.not;
 
 @Service
 public class StatisticsService {
@@ -50,21 +53,36 @@ public class StatisticsService {
 
     public Integer countHighRangServiceTypes(){
         List<Order> orders = orderRepo.findAll();
+
+        /* STREAM API
+        List<Order> filteredOrders = orders.stream().filter(not(order -> order.getServiceTypeName().getRang()
+                .equals(MASTER_LOW_RANG))).collect(Collectors.toList());
+
+        Integer sum = filteredOrders.stream().reduce(0,
+                (x,y) -> {return x + y.getServiceTypeName().getPrice();},
+                Integer::sum);
+         */
+        /* IMPERATIVE
         Integer highRangServiceTypesEarning=ZERO_EARNINGS;
-        for (int i = 0; i < orders.size(); i++) {
-            if(!Objects.equals(orders.get(i).getServiceTypeName().getRang(), MASTER_LOW_RANG)){
-                highRangServiceTypesEarning+=orders.get(i).getServiceTypeName().getPrice();
+        for (Order order : filteredOrders) {
+            if (!Objects.equals(order.getServiceTypeName().getRang(), MASTER_LOW_RANG)) {
+                highRangServiceTypesEarning += order.getServiceTypeName().getPrice();
             }
         }
-        return highRangServiceTypesEarning;
+         */
+
+        return orders.stream().filter(not(order -> order.getServiceTypeName().getRang()
+                .equals(MASTER_LOW_RANG))).reduce(0,
+                (x,y) -> {return x + y.getServiceTypeName().getPrice();},
+                Integer::sum);
     }
 
     public Integer countLowRangServiceTypes(){
         List<Order> orders = orderRepo.findAll();
         Integer lowRangServiceTypesEarning=ZERO_EARNINGS;
-        for (int i = 0; i < orders.size(); i++) {
-            if(Objects.equals(orders.get(i).getServiceTypeName().getRang(), MASTER_LOW_RANG)){
-                lowRangServiceTypesEarning+=orders.get(i).getServiceTypeName().getPrice();
+        for (Order order : orders) {
+            if (Objects.equals(order.getServiceTypeName().getRang(), MASTER_LOW_RANG)) {
+                lowRangServiceTypesEarning += order.getServiceTypeName().getPrice();
             }
         }
         return lowRangServiceTypesEarning;
