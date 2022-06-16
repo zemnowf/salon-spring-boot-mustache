@@ -115,7 +115,7 @@ public class OrderController {
 
         String chequeText = messageGeneratorService.chequeMessageGenerate(user, order);
 
-        mailSender.send(user.getMail(),"Запись оформлена", message);
+        //mailSender.send(user.getMail(),"Запись оформлена", message);
 
         orderService.saveOrder(order);
 
