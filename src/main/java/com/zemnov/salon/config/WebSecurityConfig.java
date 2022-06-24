@@ -4,7 +4,6 @@ import com.zemnov.salon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,20 +16,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true) включает аутентификацию через аннотации(пример ниже), избавляет от нагруженного configure()
-//@PreAuthorize()
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
-
-
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/main", "/registration").permitAll()
+                    .antMatchers("/login", "/registration").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
@@ -46,14 +41,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth
                 .userDetailsService(userService)
                 .passwordEncoder(NoOpPasswordEncoder.getInstance());
-//                .passwordEncoder(passwordEncoder()); это для шифровки пароля
-
-      /*  auth.jdbcAuthentication()
-            .dataSource(dataSource)
-            .passwordEncoder(NoOpPasswordEncoder.getInstance())
-            .usersByUsernameQuery("select username, password, active from usr where username=?")
-            .authoritiesByUsernameQuery(
-                "select u.username, ur.roles from usr u inner join user_role ur on u.id = ur.user_id where u.username=?");*/
     }
 
     @Bean

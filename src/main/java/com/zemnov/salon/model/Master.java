@@ -13,7 +13,7 @@ import javax.persistence.Id;
 public class Master {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String name;
     private String surname;
     private Integer rang;

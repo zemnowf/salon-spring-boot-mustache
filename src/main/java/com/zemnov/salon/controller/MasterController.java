@@ -1,60 +1,73 @@
 package com.zemnov.salon.controller;
 
+import com.zemnov.salon.dto.MasterCreateRequestDto;
 import com.zemnov.salon.model.Master;
-import com.zemnov.salon.model.User;
-import com.zemnov.salon.repository.MasterRepo;
+import com.zemnov.salon.service.master.MasterService;
+import com.zemnov.salon.service.master.MasterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @Controller
-
+@RequestMapping("/masters")
 public class MasterController {
 
-    //тут должен быть MasterService, а в нем Repo
     @Autowired
-    private MasterRepo masterRepo;
+    private MasterService masterService;
 
-    //    @PreAuthorize("hasAnyAuthority('USER')")
-    @GetMapping("/masters")
-    public String main(Map<String, Object> model) {
-        List<Master> masters = masterRepo.findAll();
+    @GetMapping
+    public String main(@RequestParam(required = false) Integer rang,  Model model) {
 
-        model.put("masters", masters);
+        List<Master> masters = masterService.findMasters(rang);
+        model.addAttribute("masters", masters);
+
         return "masters";
     }
 
-    @PostMapping("/masters")
-    public String add(
-            @AuthenticationPrincipal User user,
-//            @RequestBody User user(или ModelAttribute или как то с Model) попробуй использовать вместо RequestParam
+    @GetMapping("{master}/edit")
+    public String masterEditForm(@PathVariable Master master, Model model) {
+        model.addAttribute("master", master);
+        return "masterEdit";
+    }
+
+    @GetMapping("{master}/delete")
+    public String masterDeleteForm(@PathVariable Master master, Model model) {
+        model.addAttribute("master", master);
+
+        return "masterDelete";
+    }
+
+    @PostMapping("/edit")
+    public String masterSave(
+            @RequestParam("masterId") Master master,
             @RequestParam String name,
             @RequestParam String surname,
-            @RequestParam Integer rang, Map<String, Object> model){
-        Master master = new Master(name, surname, rang);
-        masterRepo.save(master);
-//        Iterable<Master> masters = masterRepo.findAll();
-//        model.put("masters", masters);
+            @RequestParam Integer rang, Map<String, Object> model)
+    {
+        masterService.saveMaster(master, name, surname, rang);
+        return ("redirect:/masters");
+    }
+
+    @PostMapping("/delete")
+    public String masterDelete(
+            @RequestParam("masterId") Master master
+            )
+    {
+        masterService.deleteMaster(master);
+        return ("redirect:/masters");
+    }
+
+
+    @PostMapping
+    public String add(MasterCreateRequestDto masterCreateRequestDto){
+
+        masterService.addMaster(masterCreateRequestDto);
 
         return "redirect:/masters";
     }
 
-    // это должен быть get запрос
-    @PostMapping("filter")
-    public String filter(@RequestParam Integer rang, Map<String, Object> model){
-        Iterable<Master> masters;
-
-        if(rang != 1) {
-            masters = masterRepo.findByRang(rang);
-        } else masters = masterRepo.findAll();
-
-        model.put("masters", masters);
-        return "masters";
-    }
 }
