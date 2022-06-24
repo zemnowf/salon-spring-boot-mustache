@@ -6,7 +6,7 @@
 <div class="form-row mb-2">
     <div class="form-group col-md-6">
     <form method="get" action="/masters" class="form-inline">
-        <span><input type="radio" class="form-check-input" value=1 name="rang">Все</span>
+        <span><input type="radio" class="form-check-input" value="" name="rang">Все</span>
         <span><input type="radio" class="form-check-input" value=3 name="rang">3</span>
         <span><input type="radio" class="form-check-input" value=4 name="rang">4</span>
         <span><input type="radio" class="form-check-input" value=5 name="rang">5</span>

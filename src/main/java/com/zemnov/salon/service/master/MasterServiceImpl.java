@@ -19,7 +19,7 @@ public class MasterServiceImpl implements MasterService {
 
         List<Master> masters;
 
-        if(rang != 1) {
+        if(rang != null) {
             masters = masterRepo.findByRang(rang);
         } else masters = masterRepo.findAll();
 
